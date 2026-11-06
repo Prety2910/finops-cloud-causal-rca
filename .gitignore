@@ -1,0 +1,27 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.pytest_cache/
+*.egg-info/
+data/raw/*
+data/processed/*
+data/change_events/*
+results/*
+!**/.gitkeep
+third_party/
+
+# Additional Python environments
+.venv-*/
+venv/
+
+# Secrets and local credentials
+.env.*
+!.env.example
+*.pem
+*.key
+*credentials*.json
+
+# Local caches and temporary files
+.cache/
+*.log

@@ -1,0 +1,8 @@
+# VERIFY against RCAEval / sock-shop manifests before use.
+system: sock_shop
+calls:
+  front-end: [catalogue, carts, orders, user]
+  orders: [user, carts, payment, shipping]
+  shipping: [rabbitmq]
+  queue-master: [rabbitmq]
+slo_nodes: [front-end]

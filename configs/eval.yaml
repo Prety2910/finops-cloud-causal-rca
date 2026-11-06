@@ -1,0 +1,15 @@
+seed: 0
+n_bootstrap: 1000
+splits: {dev: 0.6, calibration: 0.2, test: 0.2}
+datasets: [RE1-OB, RE2-OB, RE3-OB]    # extend: -SS, -TT; + testbed
+methods: [baro, rcd, circa, ours]
+ablations: [base, m1, m2, m1_m2, full, m2_granger, m2_no_topology]
+synthetic_changes:
+  p_miss: [0.0, 0.2, 0.5]
+  lambda_decoy: [0, 1, 2, 4]
+  jitter_s: [0, 60, 300]
+  root_deploy_offset_max_s: 120
+paths:
+  rcaeval_raw: data/raw/rcaeval
+  processed: data/processed
+  results: results

@@ -1,0 +1,17 @@
+models:
+  small: claude-haiku-5-5
+  large: claude-sonnet-5-5
+router:
+  tau_hit: 0.85         # tune on calibration split
+  tau_partial: 0.55
+  abstain_conf: 0.4
+  max_correctness_drop: 0.02
+similarity_weights: {jaccard: 0.4, path: 0.3, same_root_change: 0.2, embed: 0.1}
+embedding_model: sentence-transformers/all-MiniLM-L6-v2
+prompt:
+  top_log_lines: 20
+  use_prompt_caching: true
+pricing_usd_per_mtok:   # TODO fill from the public API pricing page; record date
+  small: {input: null, output: null}
+  large: {input: null, output: null}
+pricing_date: null

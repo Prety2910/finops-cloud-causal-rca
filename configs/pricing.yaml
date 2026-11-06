@@ -1,0 +1,27 @@
+# All prices are PLACEHOLDERS. Fill from the provider's public pricing page and
+# record source URL + date + region. Never present derived costs as real billing.
+currency: INR
+fx_usd_inr: null          # TODO fill, record date
+fx_date: null
+source_url: null
+retrieved_on: null
+region: ap-south-1        # example
+compute:
+  vcpu_hour: null         # = on-demand instance price / vCPUs
+  gb_ram_hour: null
+storage:
+  iops_month: null
+  gb_month: null
+network:
+  egress_gb: null
+  inter_az_gb: null
+requests:
+  per_million_requests: null
+# Mode "provisioned": cost = replicas x instance_hour, HPA-like step when CPU > threshold
+provisioned:
+  instance_hour: null
+  hpa_cpu_threshold: 0.70
+# Used only by the sensitivity analysis (plan §2.4c)
+sensitivity:
+  price_perturbation: 0.5   # +-50%
+  n_samples: 200

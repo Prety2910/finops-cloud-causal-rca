@@ -1,0 +1,35 @@
+# A1 suspected idle compute policy. Values are initial policy settings, not
+# universally valid thresholds; evaluate and tune on a held-out workload set.
+idle_resource:
+  observation_window_hours: 24.0
+  cpu_floor_pct: 5.0
+  minimum_idle_ratio: 0.80
+  request_rps_max: 0.01
+  network_mbps_max: 0.01
+  minimum_seasonal_drop_pp: 2.0
+  mad_scale_factor: 1.4826
+  minimum_negative_z: 1.5
+  cusum_drift: 0.25
+  cusum_threshold: 5.0
+  minimum_window_samples: 12
+  minimum_history_samples: 48
+
+# A2 VM rightsizing. The instance catalog and SLO values are supplied per call.
+rightsizing_vm:
+  observation_days: 7
+  cpu_quantile: 0.99
+  memory_quantile: 0.99
+  latency_quantile: 0.95
+  error_quantile: 0.95
+  target_cpu_utilization: 0.80
+  memory_headroom: 0.20
+  monthly_hours: 730.0
+
+# A3 excess scaling. safe_rps_per_replica must come from an identified,
+# versioned capacity test; no default capacity assumption is provided.
+unnecessary_scaling:
+  observation_days: 7
+  demand_quantile: 0.99
+  replica_headroom: 0.25
+  latency_quantile: 0.95
+  error_quantile: 0.95

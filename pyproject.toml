@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cloudrca"
+version = "0.1.0"
+description = "Change-aware, cost-attributing causal RCA with incident-graph LLM memory"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy", "pandas", "scipy", "statsmodels", "scikit-learn",
+  "networkx", "pyyaml", "causal-learn",
+]
+
+[project.optional-dependencies]
+db = ["psycopg[binary]", "sqlalchemy"]
+llm = ["anthropic", "sentence-transformers"]
+app = ["streamlit", "plotly", "streamlit-agraph", "pyvis"]
+extra = ["grakel", "ruptures"]
+dev = ["pytest", "ruff"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
