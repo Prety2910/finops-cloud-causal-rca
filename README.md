@@ -37,11 +37,14 @@ results/            outputs of `make` targets (git-ignored)
 Run the deterministic synthetic presentation walkthrough with
 `./.venv/bin/python scripts/run_policy_demo.py`. The resulting report is saved
 to `results/demo/policy_demo.json`; all values are fixtures, not real bills or
-measured savings. See [the demo guide](docs/DEMO_GUIDE.md).
+measured savings. The demo contains no AWS calls or CloudTrail observations;
+its cost and utilization inputs are synthetic. See [the demo guide](docs/DEMO_GUIDE.md).
 
 Build an offline, self-contained HTML dashboard from that report with
 `./.venv/bin/python scripts/build_demo_dashboard.py`, then open
 `results/demo/index.html` in a browser. This works without Streamlit.
+The separate `Synthetic demo artifacts` GitHub Actions workflow generates both
+files on Ubuntu and uploads them as a downloadable workflow artifact.
 
 To view the report in the existing Streamlit interface, install the optional
 app dependencies (`pip install -e '.[app]'`) and run

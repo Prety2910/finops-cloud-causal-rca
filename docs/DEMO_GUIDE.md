@@ -8,6 +8,15 @@ outcomes plus an overlap-aware fleet estimate. The script fixes its random
 seed (default 17), and `--seed` / `--output` can be supplied to reproduce or
 save another run.
 
+The equivalent portable commands used by GitHub Actions are:
+
+```bash
+python scripts/run_policy_demo.py --output results/demo/policy_demo.json
+python scripts/build_demo_dashboard.py \
+  --input results/demo/policy_demo.json \
+  --output results/demo/index.html
+```
+
 The existing dashboard reads that report. Install the optional app dependencies
 with `pip install -e '.[app]'`, then launch `streamlit run app/Home.py`. The
 dashboard code compiles, but a browser render has not yet been verified in this
@@ -24,17 +33,27 @@ that implemented policy functions compose and produce structured evidence. It
 is not a real bill, cloud observation, calibrated probability, proven causal
 effect, executed action, or measured saving. RCAEval is a separate dataset for
 service-level RCA and does not provide the billing ground truth used here.
+This walkthrough makes no AWS calls and includes zero CloudTrail observations.
+CloudTrail records, when collected separately, are real event observations;
+they are not present in this report and would be candidate temporal evidence,
+not causal proof on their own.
+
+The separate `Synthetic demo artifacts` GitHub Actions workflow runs on Ubuntu
+when manually dispatched or when relevant source files are pushed to `main`.
+It uploads `policy_demo.json` and `index.html` as a downloadable workflow
+artifact. The workflow uses no AWS credentials or services.
 
 ## Presentation flow
 
 1. Show the persistent cost excursion against the past-only seasonal Ridge
    expectation. Explain that the detector requires absolute, relative, and
    persistence gates; this does not assign a cause.
-2. Show the separate controlled SCM fixture. Excess replicas are injected as
-   the modeled cause of compute cost; explain the counterfactual value
-   function, Shapley allocation, and listed identification assumptions. This
-   scenario is deliberately separate from the cost-spike fixture, so the demo
-   does not claim to have explained that spike.
+2. Show the separate controlled SCM illustration. Excess replicas are injected
+   into the fixture's assumed data-generating process; explain the model's
+   counterfactual value function, allocation, and identification assumptions.
+   This is a methodological illustration, not evidence that a real-world
+   causal effect is identified. It is separate from the cost-spike fixture and
+   does not claim to explain that spike.
 3. Show A1 idle-resource evidence. Low CPU is paired with memory telemetry,
    request and network quietness, billable-active state and a historical
    seasonal check. A proposed stop still requires dependency, schedule,

@@ -1,0 +1,62 @@
+name: Synthetic demo artifacts
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/demo-artifacts.yml
+      - pyproject.toml
+      - scripts/run_policy_demo.py
+      - scripts/build_demo_dashboard.py
+      - src/cloudrca/**
+
+permissions:
+  contents: read
+
+jobs:
+  build-demo:
+    name: Generate demo report and dashboard
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install project dependencies
+        run: python -m pip install -e .
+
+      - name: Generate synthetic JSON report
+        run: python scripts/run_policy_demo.py --output results/demo/policy_demo.json
+
+      - name: Generate offline HTML dashboard
+        run: >-
+          python scripts/build_demo_dashboard.py
+          --input results/demo/policy_demo.json
+          --output results/demo/index.html
+
+      - name: Summarize provenance
+        run: |
+          {
+            echo "## Synthetic demo artifacts"
+            echo
+            echo "The report and dashboard contain deterministic synthetic cost and utilization fixtures."
+            echo "They contain no AWS calls or CloudTrail observations. The SCM section is an illustrative model allocation under injected assumptions; it does not establish real-world causality."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload downloadable report and dashboard
+        uses: actions/upload-artifact@v7
+        with:
+          name: synthetic-demo-${{ github.run_id }}
+          path: |
+            results/demo/policy_demo.json
+            results/demo/index.html
+          if-no-files-found: error
+          retention-days: 14

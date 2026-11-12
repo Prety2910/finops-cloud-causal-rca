@@ -64,10 +64,11 @@ def render_demo_dashboard(report: dict) -> str:
     attribution = report.get("controlled_cost_attribution", {})
     cause = attribution.get("injected_cause", "cause")
     attributed = attribution.get("phi", {}).get(cause)
-    attribution_html = f"""<section class="panel"><h2>Separate controlled causal-attribution example</h2>
+    attribution_html = f"""<section class="panel"><h2>Separate synthetic SCM attribution illustration</h2>
 <p>This injected SCM scenario is separate from the cost-spike series; it does not explain that spike.</p>
-<div class="kpis"><div><span>Observed synthetic cost delta</span><b>{_money(attribution.get('observed_delta_cost'), 'USD / bucket')}</b></div>
-<div><span>Model-attributed to {escape(str(cause))}</span><b>{_money(attributed, 'USD / bucket')}</b></div>
+<p><b>Interpretation:</b> this illustrates model-based allocation under the fixture's assumed graph and injected mechanism. It does not establish a real-world causal effect.</p>
+<div class="kpis"><div><span>Synthetic fixture cost delta</span><b>{_money(attribution.get('observed_delta_cost'), 'USD / bucket')}</b></div>
+<div><span>SCM allocation for {escape(str(cause))}</span><b>{_money(attributed, 'USD / bucket')}</b></div>
 <div><span>Unexplained model residual</span><b>{_money(attribution.get('modeled_unexplained'), 'USD / bucket')}</b></div></div>
 <details><summary>Value function and identification assumptions</summary>
 <p>{escape(str(attribution.get('value_function', 'Not supplied')))}</p>
@@ -101,7 +102,11 @@ details{{margin-top:12px}}summary{{cursor:pointer;color:var(--blue);font-weight:
 <section><h2>Fleet opportunities</h2><div style="overflow:auto"><table><thead><tr><th>Resource</th><th>Alert</th><th>Monthly estimate</th><th>Priority heuristic</th><th>Overlap group</th></tr></thead>
 <tbody>{''.join(fleet_rows) if fleet_rows else '<tr><td colspan="5">No rankable opportunities</td></tr>'}</tbody></table>
 <p class="muted">{escape(str(fleet.get('priority_policy', 'Priority policy unavailable')))}</p></section>
-<section class="panel"><h2>What this demonstration establishes</h2><p>{escape(str(report.get('interpretation', 'No interpretation supplied.')))}</p>
-<p>RCAEval is for service-level RCA and does not supply cloud billing ground truth. Causal estimates require a justified graph and identification assumptions. The action workflow is simulated; this page cannot modify cloud resources.</p></section>
+<section class="panel"><h2>Data provenance and limits</h2>
+<p><b>CloudTrail:</b> {escape(str(report.get('data_sources', {}).get('cloudtrail', {}).get('note', 'No CloudTrail provenance supplied.')))}</p>
+<p><b>Cost data:</b> {escape(str(report.get('data_sources', {}).get('cost', 'Not reported.')))}</p>
+<p><b>Utilization data:</b> {escape(str(report.get('data_sources', {}).get('utilization', 'Not reported.')))}</p>
+<p>{escape(str(report.get('interpretation', 'No interpretation supplied.')))}</p>
+<p>RCAEval is for service-level RCA and does not supply cloud billing ground truth. Model-based causal estimates depend on a justified graph and defensible identification assumptions; this synthetic example does not establish causality. The action workflow is simulated; this page cannot modify cloud resources.</p></section>
 <footer>Generated locally from {escape(str(report.get('provenance')))} · Seed {escape(str(report.get('seed')))} · For demonstration only</footer>
 </main></body></html>"""

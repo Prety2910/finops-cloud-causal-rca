@@ -24,7 +24,23 @@ from cloudrca.rca.m3_cost import LinearSCM, attribute_cost
 
 def build_demo(seed: int = 17) -> dict:
     rng = np.random.default_rng(seed)
-    result: dict = {"provenance": "synthetic_demo_only", "seed": seed}
+    result: dict = {
+        "provenance": "synthetic_demo_only",
+        "seed": seed,
+        "data_sources": {
+            "cloudtrail": {
+                "status": "not_used",
+                "observations_included": 0,
+                "note": "This demo makes no AWS calls and contains no CloudTrail observations.",
+            },
+            "cost": "Synthetic fixture values; not observed bills or charges.",
+            "utilization": "Synthetic fixture telemetry; not observed cloud metrics.",
+            "causal_attribution": (
+                "Controlled synthetic SCM illustration under injected assumptions; "
+                "not evidence that a real-world causal effect is identified."
+            ),
+        },
+    }
 
     # Cost series: seven training days with daily seasonality, then a persistent
     # modeled increase. This exercises expected-cost forecasting and alerting.
@@ -126,7 +142,7 @@ def build_demo(seed: int = 17) -> dict:
     result["fleet_ranking"] = rank_fleet_opportunities(opportunities, currency="USD")
     result["interpretation"] = (
         "All data and prices here are deterministic synthetic fixtures. Alert and savings outputs "
-        "exercise policy logic only; they are not calibrated probabilities, causal proof, cloud bills, "
+        "exercise policy logic only; they are not calibrated probabilities, established causal effects, cloud bills, "
         "executed actions, or verified savings."
     )
     return result
