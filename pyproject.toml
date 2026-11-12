@@ -9,7 +9,7 @@ description = "Change-aware, cost-attributing causal RCA with incident-graph LLM
 requires-python = ">=3.10"
 dependencies = [
   "numpy", "pandas", "scipy", "statsmodels", "scikit-learn",
-  "networkx", "pyyaml", "causal-learn",
+  "networkx", "pyyaml", "causal-learn", "pyarrow>=12,<26",
 ]
 
 [project.optional-dependencies]
@@ -18,6 +18,7 @@ llm = ["anthropic", "sentence-transformers"]
 app = ["streamlit", "plotly", "streamlit-agraph", "pyvis"]
 extra = ["grakel", "ruptures"]
 dev = ["pytest", "ruff"]
+aws = ["boto3>=1.34,<2"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
