@@ -1,0 +1,67 @@
+name: Python tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: pytest (Python 3.11, Ubuntu)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install project and test dependencies
+        run: python -m pip install -e ".[dev,aws]"
+
+      - name: Run complete pytest suite
+        run: |
+          mkdir -p pytest-results
+          python -m pytest -ra --junitxml=pytest-results/junit.xml
+
+      - name: Report exact test totals
+        if: always()
+        run: |
+          python - <<'PY'
+          import os
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          report = Path("pytest-results/junit.xml")
+          if not report.exists():
+              summary = "## Pytest totals\n\nJUnit report unavailable; pytest did not produce a report.\n"
+              print(summary)
+          else:
+              root = ET.parse(report).getroot()
+              suites = [root] if root.tag == "testsuite" else list(root.iter("testsuite"))
+              totals = {key: sum(int(suite.attrib.get(key, 0)) for suite in suites)
+                        for key in ("tests", "failures", "errors", "skipped")}
+              passed = totals["tests"] - totals["failures"] - totals["errors"] - totals["skipped"]
+              summary = (
+                  "## Pytest totals\n\n"
+                  f"- Passed: **{passed}**\n"
+                  f"- Failed: **{totals['failures']}**\n"
+                  f"- Errors: **{totals['errors']}**\n"
+                  f"- Skipped: **{totals['skipped']}**\n"
+              )
+              print(summary)
+          summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+          if summary_path:
+              with open(summary_path, "a", encoding="utf-8") as stream:
+                  stream.write(summary)
+          PY
